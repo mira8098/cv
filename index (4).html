@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Próximamente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;600;800&family=Space+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --accent: #c8ff2e;
+      --accent-dim: rgba(200, 255, 46, 0.08);
+      --text: #e8e8ed;
+      --muted: #6b6b7b;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Animated background grid */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200, 255, 46, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 255, 46, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridShift 20s linear infinite;
+    }
+
+    @keyframes gridShift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(60px, 60px); }
+    }
+
+    /* Glow orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.4;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: rgba(200, 255, 46, 0.15);
+      top: -100px; right: -100px;
+    }
+
+    .orb-2 {
+      width: 300px; height: 300px;
+      background: rgba(46, 200, 255, 0.1);
+      bottom: -80px; left: -80px;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -20px) scale(1.1); }
+    }
+
+    /* Main content */
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem 2rem 5rem;
+      max-width: 700px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border: 1px solid rgba(200, 255, 46, 0.2);
+      border-radius: 100px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    .badge .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Heading */
+    h1 {
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.8s ease 0.15s both;
+    }
+
+    h1 .line { display: block; }
+
+    h1 .highlight {
+      color: var(--accent);
+      position: relative;
+    }
+
+    /* Subtitle */
+    .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+
+    /* Divider */
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      margin: 0 auto 2rem;
+      animation: fadeInUp 0.8s ease 0.45s both;
+    }
+
+    .footer-info {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      animation: fadeInUp 0.8s ease 0.6s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Noise overlay */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.035;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ===== Language Switcher Footer ===== */
+    .lang-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 1.4rem 1rem;
+      background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 60%, transparent);
+      animation: fadeInUp 0.8s ease 0.75s both;
+    }
+
+    .lang-footer .lang-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      opacity: 0.4;
+    }
+
+    .lang-footer .separator {
+      color: rgba(107, 107, 123, 0.25);
+      font-size: 0.85rem;
+      user-select: none;
+    }
+
+    .lang-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 6px 16px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .lang-btn:hover {
+      color: var(--text);
+      border-color: rgba(200, 255, 46, 0.15);
+      background: var(--accent-dim);
+    }
+
+    .lang-btn.active {
+      color: var(--accent);
+      border-color: rgba(200, 255, 46, 0.3);
+      background: var(--accent-dim);
+      pointer-events: none;
+    }
+
+    /* Transition for text changes */
+    .fade-swap {
+      animation: fadeSwap 0.35s ease;
+    }
+
+    @keyframes fadeSwap {
+      0% { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="noise"></div>
+
+  <div class="container">
+    <div class="badge">
+      <span class="dot"></span>
+      <span id="badge-text">En construcción</span>
+    </div>
+
+    <h1>
+      <span class="line" id="heading-1">Algo grande</span>
+      <span class="line" id="heading-2">viene <span class="highlight" id="heading-hl">pronto</span></span>
+    </h1>
+
+    <p class="subtitle" id="subtitle">
+      Estamos trabajando en algo increíble.<br>
+      Vuelve pronto para descubrirlo.
+    </p>
+
+    <div class="divider"></div>
+
+    <p class="footer-info" id="footer-tag">— Próximamente —</p>
+  </div>
+
+  <!-- Language Switcher Footer -->
+  <footer class="lang-footer">
+    <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M2 12h20"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/>
+    </svg>
+    <button class="lang-btn active" data-lang="es" onclick="switchLang('es')">Español</button>
+    <span class="separator">·</span>
+    <button class="lang-btn" data-lang="en" onclick="switchLang('en')">English</button>
+    <span class="separator">·</span>
+    <button class="lang-btn" data-lang="fr" onclick="switchLang('fr')">Français</button>
+  </footer>
+
+  <script>
+    const translations = {
+      es: {
+        badge: "En construcción",
+        heading1: "Algo grande",
+        heading2pre: "viene ",
+        highlight: "pronto",
+        subtitle: "Estamos trabajando en algo increíble.<br>Vuelve pronto para descubrirlo.",
+        footerTag: "— Próximamente —",
+        title: "Próximamente",
+        lang: "es"
+      },
+      en: {
+        badge: "Under construction",
+        heading1: "Something big",
+        heading2pre: "is coming ",
+        highlight: "soon",
+        subtitle: "We're working on something amazing.<br>Come back soon to discover it.",
+        footerTag: "— Coming Soon —",
+        title: "Coming Soon",
+        lang: "en"
+      },
+      fr: {
+        badge: "En construction",
+        heading1: "Quelque chose",
+        heading2pre: "de grand arrive ",
+        highlight: "bientôt",
+        subtitle: "Nous travaillons sur quelque chose d'incroyable.<br>Revenez bientôt pour le découvrir.",
+        footerTag: "— Bientôt —",
+        title: "Bientôt",
+        lang: "fr"
+      }
+    };
+
+    function switchLang(lang) {
+      const t = translations[lang];
+      if (!t) return;
+
+      // Animate content swap
+      const container = document.querySelector('.container');
+      container.classList.remove('fade-swap');
+      void container.offsetWidth; // trigger reflow
+      container.classList.add('fade-swap');
+
+      // Update text
+      document.getElementById('badge-text').textContent = t.badge;
+      document.getElementById('heading-1').textContent = t.heading1;
+
+      const h2 = document.getElementById('heading-2');
+      h2.innerHTML = '';
+      h2.appendChild(document.createTextNode(t.heading2pre));
+      const hl = document.createElement('span');
+      hl.className = 'highlight';
+      hl.id = 'heading-hl';
+      hl.textContent = t.highlight;
+      h2.appendChild(hl);
+
+      document.getElementById('subtitle').innerHTML = t.subtitle;
+      document.getElementById('footer-tag').textContent = t.footerTag;
+      document.title = t.title;
+      document.documentElement.lang = t.lang;
+
+      // Toggle active button
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+    }
+  </script>
+
+</body>
+</html>
